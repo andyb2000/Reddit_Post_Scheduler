@@ -5,6 +5,7 @@ import os
 import subprocess
 import functionality
 import scheduler
+import sys,argparse
 from datetime import datetime
 
 
@@ -13,8 +14,18 @@ from datetime import datetime
 #it will ask the user if it wants to generate new ones or use the ones found.
 functionality.read_message('welcome')
 
+parser=argparse.ArgumentParser(description="Reddit_Post_Scheduler")
+parser.add_argument("--autokey", default="")
+parser.add_argument("--subreddit", default="")
+parser.add_argument("--title", default="")
+parser.add_argument("--skipscheduler", default="")
+args=parser.parse_args()
+
 if functionality.check_existing_keys() == True:
-    functionality.existent_keys_present()
+    if args.autokey:
+        print("--autokey added - using existing keys\n")
+    else:
+        functionality.existent_keys_present()
 else:
     print("No Reddit user keys detected. Let's configure them")
     functionality.add_new_keys()
@@ -23,8 +34,18 @@ else:
 #Once credentials are set up, the actual Reddit post set-up begins
 #First we ask the user for the subreddit they want to schedule a post for
 #Then we ask for the title of that post
-choosen_subreddit = scheduler.choose_subreddit()
-post_choosen_title = scheduler.choose_post_title()
+if args.subreddit:
+    print("--subreddit has set to: {args.subreddit}\n")
+    choosen_subreddit = args.subreddit
+else:
+    choosen_subreddit = scheduler.choose_subreddit()
+
+if args.title:
+    print("--title has set to: {args.title}\n")
+    post_choosen_title = args.title
+else:
+    post_choosen_title = scheduler.choose_post_title()
+
 no_whitespaces_file_title = functionality.replace_spaces_with_underscores(post_choosen_title)
 
 
@@ -93,8 +114,8 @@ except ValueError as e:
 # Necessary to retrieve the full location of the Python file
 # Current directory of the running Python script
 script_dir = os.path.dirname(os.path.abspath(__file__))
-python_post_file = os.path.join(script_dir, f'{no_whitespaces_file_title}.py')
-bat_post_file = os.path.join(script_dir, f'{no_whitespaces_file_title}.bat')
+python_post_file = os.path.join(script_dir, f'posts/{no_whitespaces_file_title}.py')
+bat_post_file = os.path.join(script_dir, f'posts/{no_whitespaces_file_title}.bat')
 
 # Create the batch file that will execute the Python file
 scheduler.create_batch_file(no_whitespaces_file_title)

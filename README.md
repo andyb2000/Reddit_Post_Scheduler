@@ -172,19 +172,17 @@ The two files will have the same name as the title of the post you wanted to mak
 
 
 
+Release notes/version history
+--------------------
 
+0.1 - Initial release by @Chino-chan
 
+0.2 - Updated release by @andyb2000
 
+	* Posts now get written into a separate folder to avoid filling base/code folder
 
+	* Don't prompt to confirm api/configuration at each run
 
+	* Added commandline parameters to allow for automating some of the options (allows for better batch control)
 
-
-
-
-
-
-
-
-
-
-
+        * After posting, the batch file deletes itself and the python file

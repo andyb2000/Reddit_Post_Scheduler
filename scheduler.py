@@ -37,6 +37,9 @@ def create_post_file(type_post,title, subreddit, fixed_file_title, image ="", li
     
     if type_post.casefold() == 'a':
         content = f"""
+        import os
+        import sys
+        sys.path.append(os.getcwd())
         import praw
         import functionality
         import scheduler
@@ -56,11 +59,14 @@ def create_post_file(type_post,title, subreddit, fixed_file_title, image ="", li
         subreddit_instance.submit(title="{title}", selftext= text_post)
         """
         final_file_content = textwrap.dedent(content)
-        file = pathlib.Path(f'{fixed_file_title}.py')
+        file = pathlib.Path(f'./posts/{fixed_file_title}.py')
         file.write_text(final_file_content)
     
     if type_post.casefold() == 'b':
         content = f"""
+        import os
+        import sys
+        sys.path.append(os.getcwd())
         import praw
         import functionality
         import scheduler
@@ -76,11 +82,14 @@ def create_post_file(type_post,title, subreddit, fixed_file_title, image ="", li
         subreddit_instance.submit_image(title="{title}", image_path="reddit_images/{image}")
         """
         final_file_content = textwrap.dedent(content)
-        file = pathlib.Path(f'{fixed_file_title}.py')
+        file = pathlib.Path(f'./posts/{fixed_file_title}.py')
         file.write_text(final_file_content)
     
     if type_post.casefold() == 'c':
         content = f"""
+        import os
+        import sys
+        sys.path.append(os.getcwd())
         import praw
         import functionality
         import scheduler
@@ -96,7 +105,7 @@ def create_post_file(type_post,title, subreddit, fixed_file_title, image ="", li
         subreddit_instance.submit(title="{title}", url= "{link}")
         """
         final_file_content = textwrap.dedent(content)
-        file = pathlib.Path(f'{fixed_file_title}.py')
+        file = pathlib.Path(f'./posts/{fixed_file_title}.py')
         file.write_text(final_file_content)
 
 
@@ -104,13 +113,15 @@ def create_batch_file(title):
     content = f"""
     @echo off
     rem Change directory to the directory of this batch file
-    cd /d "%~dp0"
+    cd /d "%~dp0/posts"
     python {title}.py
-    pause
+    timeout /t 15 /nobreak > NUL
+    del /q /f {title}.py
+    ( del /q /f "%~f0" >nul 2>&1 & exit /b 0  )
     """
     
     final_file_content = textwrap.dedent(content)
-    file = pathlib.Path(f'{title}.bat')
+    file = pathlib.Path(f'./posts/{title}.bat')
     file.write_text(final_file_content)
 
 
